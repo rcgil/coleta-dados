@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  
+  project:
+    image: dados:latest
+    # volumes:
+    # - .:/app
+    build: ./services
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./services/:/usr/src/app/
+    ports:
+      - 5000:5000
+    env_file:
+    - ./.env.dev
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:13-alpine
+    environment:   # Set up postgres database name and password
+      POSTGRES_PASSWORD: dados_teste
+      POSTGRES_DB: dados
+      POSTGRES_USER: dados_teste
+    ports:    # Set up ports exposed for other containers to connect to
+      - 5432:5432
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+
+  # python_app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - postgres_db
+  #   networks:
+  #     - app-tier
+  #   command:
+  #     tail -f /dev/null
+  
+
+networks:
+  app-tier:
+    driver: bridge
