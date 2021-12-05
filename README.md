@@ -69,6 +69,14 @@ $ docker-compose up
 # Para parar a aplicação rode o comando:
 $ docker-compose down
 
+# A rota http://localhost:5000/
+# Verifica se o servidor está funcionando
+
+# A rota http://localhost:5000/process-file
+# Inicia o processamento do arquivo
+# A base de dados criada terá o nome "dados" e a tabela terá o mesmo nome
+# O usuário para acessar a base é "dados_teste e a senha "dados_teste"
+# o Serviço do postgres estará rodando na porta padrão 5432
 ```
 
 ## 🛠 Tecnologias
