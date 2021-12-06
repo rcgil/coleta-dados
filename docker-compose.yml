@@ -4,8 +4,6 @@ services:
   
   project:
     image: dados:latest
-    # volumes:
-    # - .:/app
     build: ./services
     command: python manage.py run -h 0.0.0.0
     volumes:
@@ -27,18 +25,6 @@ services:
       - 5432:5432
     volumes:
       - ./postgres:/docker-entrypoint-initdb.d
-
-  # python_app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - postgres_db
-  #   networks:
-  #     - app-tier
-  #   command:
-  #     tail -f /dev/null
-  
 
 networks:
   app-tier:

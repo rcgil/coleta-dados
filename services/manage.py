@@ -1,6 +1,5 @@
 from flask.cli import FlaskGroup
-# import project.dados as d
-from project.dados import app, db, Dados, DadosSchema
+from project.dados import app, db
 
 
 cli = FlaskGroup(app)
@@ -15,4 +14,3 @@ def create_db():
 
 if __name__ == "__main__":
     cli()
-    # d.process_file()

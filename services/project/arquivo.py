@@ -1,7 +1,8 @@
 import re
 import threading
 from flask import jsonify, Blueprint
-from flask_cors import CORS
+import schedule
+
 
 route_api = Blueprint('route_api', __name__)
 # teste = DadosSchema()
@@ -16,29 +17,23 @@ def process_file():
 
     iteration = 1
     start = 0
-    insertThreads = []
-    # Cria uma thread a cada 5000 linhas
-    for step in range(5000, len(lines), 5000):
-        insertThreads.append(
-            threading.Thread(
-                target=thread_cleanup,
-                args=("thread_"+str(iteration), lines[start:step])))
-        if step+5000 > len(lines):
-            insertThreads.append(
-                threading.Thread(
-                    target=thread_cleanup,
-                    args=("thread_"+str(iteration+1), lines[start+5001: len(lines)])))
+    step = 0
 
+    for step in (5000, len(lines), 5000):
+        schedule.every(1).seconds.do(run_threaded, thread_cleanup(
+            "thread_"+str(iteration), lines[start:step]))
         start = step
         iteration += 1
-
-    for t in insertThreads:
-        t.start()
-
-    for t in insertThreads:
-        t.join()
+        if step+5000 > len(lines):
+            schedule.every(1).seconds.do(run_threaded, thread_cleanup(
+                "thread_"+str(iteration), lines[start+5001:step]))
 
     return jsonify(len(lines))
+
+
+def run_threaded(job_func):
+    job_thread = threading.Thread(target=job_func)
+    job_thread.start()
 
 
 def thread_cleanup(thread_name, data):
